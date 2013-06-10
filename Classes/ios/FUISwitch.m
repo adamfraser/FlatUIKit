@@ -60,11 +60,11 @@
     [internalContainer addSubview:thumbView];
     self.thumbView = thumbView;
     [self addSubview:internalContainer];
-    
+
     UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panned:)];
     panGestureRecognizer.cancelsTouchesInView = NO;
     [self addGestureRecognizer:panGestureRecognizer];
-    
+
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped:)];
     [self addGestureRecognizer:tapGestureRecognizer];
     _on = YES;
@@ -74,7 +74,7 @@
 
 - (void) layoutSubviews {
     [super layoutSubviews];
-    
+
     //container
     CGSize size = self.frame.size;
     size.width *= 2;
@@ -82,14 +82,14 @@
     self.internalContainer.contentSize = size;
     self.internalContainer.frame = self.bounds;
     CGFloat contentHeight = self.internalContainer.contentSize.height;
-    
+
     //thumb image
     CGFloat insetFraction = .75;
     CGFloat thumbEdgeSize = floorf(contentHeight * insetFraction);
     CGFloat thumbInset = (contentHeight - thumbEdgeSize) / 2;
     self.thumbView.frame = CGRectMake((self.internalContainer.contentSize.width - contentHeight) / 2 + thumbInset, thumbInset, thumbEdgeSize, thumbEdgeSize);
     self.thumbView.layer.cornerRadius = thumbEdgeSize / 2;
-    
+
     //labels
     CGRect left = CGRectMake(0, 0, (self.internalContainer.contentSize.width - self.thumbView.frame.size.width)/2, contentHeight);
     CGRect right = left;
@@ -124,7 +124,7 @@
 }
 
 - (void) panned:(UIPanGestureRecognizer *)gestureRecognizer {
-    
+
     CGPoint translation = [gestureRecognizer translationInView:self.internalContainer];
     [gestureRecognizer setTranslation:CGPointZero inView:self.internalContainer];
     CGPoint newOffset = self.internalContainer.contentOffset;
@@ -132,18 +132,18 @@
     CGFloat maxOffset = self.internalContainer.contentSize.width - self.frame.size.width;
     newOffset.x = MAX(newOffset.x, 0);
     newOffset.x = MIN(newOffset.x, maxOffset);
-    
+
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan ||
         gestureRecognizer.state == UIGestureRecognizerStateChanged) {
-        
+
         [self setPercentOn:(1 - newOffset.x/maxOffset) animated:NO];
-        
+
     }
     else if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
         BOOL left = newOffset.x > maxOffset / 2;
         [self setOn:(!left) animated:YES];
     }
-    
+
 }
 
 - (void) tapped:(UITapGestureRecognizer *)gestureRecognizer {
@@ -184,7 +184,7 @@
 
 - (void)setHighlighted:(BOOL)highlighted {
     [super setHighlighted:highlighted];
-    
+
     if (highlighted)
         self.backgroundColor = self.highlightedColor;
 }
